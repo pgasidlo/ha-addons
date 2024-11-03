@@ -1,7 +1,8 @@
+# Define build argument for the base image
 ARG BUILD_FROM
 FROM $BUILD_FROM
 
-ENV LANG=C.UTF-8
+RUN env
 
 RUN echo "https://dl-cdn.alpinelinux.org/alpine/edge/community" >> /etc/apk/repositories
 RUN echo "https://dl-cdn.alpinelinux.org/alpine/edge/main" >> /etc/apk/repositories
@@ -38,10 +39,15 @@ COPY APKBUILD /home/user1/aports/ebusd
 
 USER root
 
-RUN su - user1 CBUILD=`uname -m` PATH=$PATH bash -c "cd /home/user1 && abuild-keygen -a -n -i"
-RUN su - user1 CBUILD=`uname -m` PATH=$PATH bash -c "cd /home/user1/aports/ebusd && abuild -r"
+# Set architecture in an environment variable
+ARG ARCH
+RUN ARCH=$(uname -m) && echo "Architecture is $ARCH"
+ENV ARCH=${ARCH}
 
-RUN apk add --allow-untrusted /home/user1/packages/aports/`uname -m`/ebusd-24.1-r0.apk
+RUN su - user1 CBUILD=$ARCH PATH=$PATH bash -c "cd /home/user1 && abuild-keygen -a -n -i"
+RUN su - user1 CBUILD=$ARCH PATH=$PATH bash -c "cd /home/user1/aports/ebusd && abuild -r"
+
+RUN apk add --allow-untrusted /home/user1/packages/aports/$ARCH/ebusd-24.1-r0.apk
 
 LABEL Description="ebusd"
 
