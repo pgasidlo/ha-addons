@@ -29,19 +29,18 @@ VOLUME /home/user1/aports
 WORKDIR /home/user1/aports
 RUN chown user1:user1 /home/user1/aports
 
-# make user1 the current user in the image
-#USER user1
-
 # create keys for signing packages after the build has been finished
-RUN abuild-keygen -a -n -i
 
+# make user1 the current user in the image
+USER user1
 RUN mkdir -p /home/user1/aports/ebusd
 COPY APKBUILD /home/user1/aports/ebusd
-RUN cd /home/user1/aports/ebusd && abuild -r
-
-RUN find /home/user1/packages/ >&2
 
 USER root
+
+RUN su - user1 bash -c "cd /home/user1 && abuild-keygen -a -n -i"
+RUN su - user1 bash -c "cd /home/user1/aports/ebusd && abuild -r"
+
 RUN apk add --allow-untrusted /home/user1/packages/aports/`uname -m`/ebusd-24.1-r0.apk
 
 LABEL Description="ebusd"
