@@ -8,7 +8,7 @@ RUN echo "https://dl-cdn.alpinelinux.org/alpine/edge/community" >> /etc/apk/repo
 RUN echo "https://dl-cdn.alpinelinux.org/alpine/edge/main" >> /etc/apk/repositories
 
 # install required packages to build "alpine linux" packages
-RUN apk add --update --no-cache --no-progress alpine-sdk coreutils bash sudo cmake mosquitto-dev openssl-dev samurai
+RUN apk add --update --no-cache --no-progress alpine-sdk coreutils bash sudo cmake mosquitto-dev openssl-dev samurai apk-tools
 
 # setup directory for built packages
 RUN mkdir -p /var/cache/distfiles
