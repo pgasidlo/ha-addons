@@ -8,10 +8,14 @@ RUN echo "https://dl-cdn.alpinelinux.org/alpine/edge/community" \
 RUN echo "https://dl-cdn.alpinelinux.org/alpine/edge/main" \
     >> /etc/apk/repositories
 
+RUN adduser -G abuild -g "Alpine Package Builder" -s /bin/sh -D builder
+RUN echo "builder ALL=(ALL) NOPASSWD:ALL" >> /etc/sudoers
+
 #RUN apk add --no-cache ebusd=24.1
 RUN apk add alpine-sdk
 RUN apk add abuild-rootbld
-RUN abuild ebusd
+RUN su -l builder
+RUN abuild alpine
 
 LABEL Description="ebusd"
 
