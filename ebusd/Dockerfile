@@ -3,26 +3,48 @@ FROM $BUILD_FROM
 
 ENV LANG C.UTF-8
 
-RUN echo "https://dl-cdn.alpinelinux.org/alpine/edge/community" \
-    >> /etc/apk/repositories
-RUN echo "https://dl-cdn.alpinelinux.org/alpine/edge/main" \
-    >> /etc/apk/repositories
+RUN echo "https://dl-cdn.alpinelinux.org/alpine/edge/community" >> /etc/apk/repositories
+RUN echo "https://dl-cdn.alpinelinux.org/alpine/edge/main" >> /etc/apk/repositories
 
-RUN adduser -G abuild -g "Alpine Package Builder" -s /bin/sh -D builder
-COPY APKBUILD /home/builder
-RUN echo "builder ALL=(ALL) NOPASSWD:ALL" >> /etc/sudoers
+# install required packages to build "alpine linux" packages
+RUN apk add --update --no-cache --no-progress alpine-sdk coreutils bash
+RUN apk add --update --no-cache --no-progress sudo
+RUN apk add --update --no-cache --no-progress cmake mosquitto-dev openssl-dev samurai
 
-RUN touch /etc/apk/keys
-RUN apk add alpine-sdk abuild-rootbld cmake sudo mosquitto-dev openssl-dev samurai
+# setup directory for built packages
+RUN mkdir -p /var/cache/distfiles
+RUN chmod a+w /var/cache/distfiles
+RUN chgrp abuild /var/cache/distfiles
+RUN chmod g+w /var/cache/distfiles
 
-USER builder
-RUN abuild-keygen -n -a
-RUN cd /home/builder && abuild >&2
-#RUN su -p -l builder -- `which abuild-keygen` -n -a
-#RUN su -p -l builder -- `which abuild` >&2
+# setup the abuild configuration
+RUN echo 'PACKAGER="Piotr Gasidlo <quaker@barbara.eu.org>"' >> /etc/abuild.conf
+RUN echo 'MAINTAINER="$PACKAGER"' >> /etc/abuild.conf
+RUN echo "%abuild ALL=(ALL) NOPASSWD: ALL" >> /etc/sudoers.d/abuild
+
+# setup the build user in container
+RUN adduser -D user1
+RUN addgroup user1 abuild
+
+# setup directory to pass in build instructions files for abuild
+VOLUME /home/user1/aports
+WORKDIR /home/user1/aports
+RUN chown user1:user1 /home/user1/aports
+
+# make user1 the current user in the image
+USER user1
+
+# create keys for signing packages after the build has been finished
+RUN abuild-keygen -a -i -n
+
+RUN mkdir -p /home/user1/aports/ebusd
+COPY APKBUILD /home/user1/aports/ebusd
+RUN cd /home/user1/aports/ebusd && abuild -r
+
+RUN find /home/user1/packages/ >&2
 
 USER root
-RUN apk add --allow-untrusted /home/builder/packages/home/`uname -m`/ebusd-24.1-r0.apk
+RUN apk add --allow-untrusted /home/user1/packages/aports/`uname -m`/ebusd-24.1-r0.apk
 
 LABEL Description="ebusd"
 
