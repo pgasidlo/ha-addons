@@ -2,7 +2,6 @@ ARG BUILD_FROM
 FROM $BUILD_FROM
 
 ENV LANG C.UTF-8
-ENV PATH /usr/local/bin:/usr/bin:/bin
 
 RUN echo "https://dl-cdn.alpinelinux.org/alpine/edge/community" \
     >> /etc/apk/repositories
@@ -16,12 +15,9 @@ RUN echo "builder ALL=(ALL) NOPASSWD:ALL" >> /etc/sudoers
 #RUN apk add --no-cache ebusd=24.1
 RUN touch /etc/apk/keys
 RUN apk add alpine-sdk abuild-rootbld cmake sudo mosquitto-dev openssl-dev samurai
-RUN apk fix --no-cache apk-tools
 
-ENV CBUILD `uname -m`
-
-RUN su -l builder -- `which abuild-keygen` -n -a
-RUN su -l builder -- `which abuild` >&2
+RUN su -p -l builder -- `which abuild-keygen` -n -a
+RUN su -p -l builder -- `which abuild` >&2
 RUN apk add --allow-untrusted /home/builder/packages/home/`uname -m`/ebusd-24.1-r0.apk
 
 LABEL Description="ebusd"
