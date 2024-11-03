@@ -12,12 +12,16 @@ RUN adduser -G abuild -g "Alpine Package Builder" -s /bin/sh -D builder
 COPY APKBUILD /home/builder
 RUN echo "builder ALL=(ALL) NOPASSWD:ALL" >> /etc/sudoers
 
-#RUN apk add --no-cache ebusd=24.1
 RUN touch /etc/apk/keys
 RUN apk add alpine-sdk abuild-rootbld cmake sudo mosquitto-dev openssl-dev samurai
 
-RUN su -p -l builder -- `which abuild-keygen` -n -a
-RUN su -p -l builder -- `which abuild` >&2
+USER builder
+RUN abuild-keygen -n -a
+RUN cd /home/builder && abuild >&2
+#RUN su -p -l builder -- `which abuild-keygen` -n -a
+#RUN su -p -l builder -- `which abuild` >&2
+
+USER root
 RUN apk add --allow-untrusted /home/builder/packages/home/`uname -m`/ebusd-24.1-r0.apk
 
 LABEL Description="ebusd"
