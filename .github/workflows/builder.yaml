@@ -37,6 +37,7 @@ jobs:
         uses: home-assistant/builder@2024.08.2
         with:
           args: |
+            -e ARCH=${{ matrix.arch }} \
             --${{ matrix.arch }} \
             --target ${{matrix.addon}} \
             --image "ha-addon-ebusd-${{ matrix.arch }}" \
