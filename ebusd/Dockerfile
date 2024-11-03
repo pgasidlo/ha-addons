@@ -14,7 +14,8 @@ RUN echo "builder ALL=(ALL) NOPASSWD:ALL" >> /etc/sudoers
 
 #RUN apk add --no-cache ebusd=24.1
 RUN touch /etc/apk/keys
-RUN apk add alpine-sdk abuild-rootbld cmake sudo apk-tools mosquitto-dev openssl-dev samurai
+RUN apk add alpine-sdk abuild-rootbld cmake sudo mosquitto-dev openssl-dev samurai
+RUN apk add --no-cache apk-tools
 RUN su -l builder -- `which abuild-keygen` -n -a
 RUN su -l builder -- `which abuild` >&2
 RUN apk add --allow-untrusted /home/builder/packages/home/`uname -m`/ebusd-24.1-r0.apk
