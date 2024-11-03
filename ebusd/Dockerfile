@@ -2,6 +2,7 @@ ARG BUILD_FROM
 FROM $BUILD_FROM
 
 ENV LANG C.UTF-8
+ENV PATH /usr/local/bin:/usr/bin:/bin
 
 RUN echo "https://dl-cdn.alpinelinux.org/alpine/edge/community" \
     >> /etc/apk/repositories
