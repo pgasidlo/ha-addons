@@ -19,7 +19,7 @@ RUN touch /etc/apk/keys
 RUN apk add alpine-sdk abuild-rootbld cmake sudo
 RUN su -l builder -- `which abuild-keygen` -n -a
 RUN su -l builder -- `which abuild` >&2
-RUN apk add --allow-untrusted /home/builder/packages/home/x86_64/ebusd-24.1-r0.apk
+RUN apk add --allow-untrusted /home/builder/packages/home/`uname -m`/ebusd-24.1-r0.apk
 
 LABEL Description="ebusd"
 
