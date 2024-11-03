@@ -38,10 +38,8 @@ COPY APKBUILD /home/user1/aports/ebusd
 
 USER root
 
-ENV CBUILD=x86_64
-
-RUN su - user1 PATH=$PATH bash -c "cd /home/user1 && abuild-keygen -a -n -i"
-RUN su - user1 PATH=$PATH bash -c "cd /home/user1/aports/ebusd && abuild -r"
+RUN su - user1 CBUILD=`uname -m` PATH=$PATH bash -c "cd /home/user1 && abuild-keygen -a -n -i"
+RUN su - user1 CBUILD=`uname -m` PATH=$PATH bash -c "cd /home/user1/aports/ebusd && abuild -r"
 
 RUN apk add --allow-untrusted /home/user1/packages/aports/`uname -m`/ebusd-24.1-r0.apk
 
