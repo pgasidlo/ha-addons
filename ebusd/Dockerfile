@@ -14,8 +14,7 @@ RUN echo "builder ALL=(ALL) NOPASSWD:ALL" >> /etc/sudoers
 #RUN apk add --no-cache ebusd=24.1
 RUN apk add alpine-sdk
 RUN apk add abuild-rootbld
-RUN su -l builder
-RUN abuild alpine
+RUN su -l builder abuild alpine
 
 LABEL Description="ebusd"
 
