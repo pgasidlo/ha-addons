@@ -36,6 +36,8 @@ jobs:
         if: contains(steps.info.outputs.architectures, matrix.arch)
         uses: home-assistant/builder@2024.08.2
         with:
+          env: | # YAML, but pipe character is necessary
+            ARCH: ${{ matrix.arch }}
           args: |
             --${{ matrix.arch }} \
             --target ${{matrix.addon}} \
