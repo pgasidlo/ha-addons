@@ -7,9 +7,7 @@ RUN echo "https://dl-cdn.alpinelinux.org/alpine/edge/community" >> /etc/apk/repo
 RUN echo "https://dl-cdn.alpinelinux.org/alpine/edge/main" >> /etc/apk/repositories
 
 # install required packages to build "alpine linux" packages
-RUN apk add --update --no-cache --no-progress alpine-sdk coreutils bash
-RUN apk add --update --no-cache --no-progress sudo
-RUN apk add --update --no-cache --no-progress cmake mosquitto-dev openssl-dev samurai
+RUN apk add --update --no-cache --no-progress alpine-sdk coreutils bash sudo cmake mosquitto-dev openssl-dev samurai
 
 # setup directory for built packages
 RUN mkdir -p /var/cache/distfiles
@@ -39,7 +37,7 @@ RUN abuild-keygen -a -n
 
 RUN mkdir -p /home/user1/aports/ebusd
 COPY APKBUILD /home/user1/aports/ebusd
-RUN cd /home/user1/aports/ebusd && abuild -r
+RUN cd /home/user1/aports/ebusd && sudo abuild -r
 
 RUN find /home/user1/packages/ >&2
 
