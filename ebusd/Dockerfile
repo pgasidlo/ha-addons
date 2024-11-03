@@ -38,6 +38,8 @@ COPY APKBUILD /home/user1/aports/ebusd
 
 USER root
 
+ENV CBUILD x86_64
+
 RUN su - user1 PATH=$PATH bash -c "cd /home/user1 && abuild-keygen -a -n -i"
 RUN su - user1 PATH=$PATH bash -c "cd /home/user1/aports/ebusd && abuild -r"
 
