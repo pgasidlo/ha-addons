@@ -15,7 +15,7 @@ RUN echo "builder ALL=(ALL) NOPASSWD:ALL" >> /etc/sudoers
 #RUN apk add --no-cache ebusd=24.1
 RUN touch /etc/apk/keys
 RUN apk add alpine-sdk abuild-rootbld cmake sudo mosquitto-dev openssl-dev samurai
-RUN apk add --no-cache apk-tools
+RUN apk fix --no-cache apk-tools
 
 ENV CBUILD `uname -m`
 
