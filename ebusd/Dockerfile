@@ -1,7 +1,7 @@
 ARG BUILD_FROM
 FROM $BUILD_FROM
 
-ENV LANG C.UTF-8
+ENV LANG=C.UTF-8
 
 RUN echo "https://dl-cdn.alpinelinux.org/alpine/edge/community" >> /etc/apk/repositories
 RUN echo "https://dl-cdn.alpinelinux.org/alpine/edge/main" >> /etc/apk/repositories
@@ -38,7 +38,7 @@ COPY APKBUILD /home/user1/aports/ebusd
 
 USER root
 
-ENV CBUILD x86_64
+ENV CBUILD=x86_64
 
 RUN su - user1 PATH=$PATH bash -c "cd /home/user1 && abuild-keygen -a -n -i"
 RUN su - user1 PATH=$PATH bash -c "cd /home/user1/aports/ebusd && abuild -r"
