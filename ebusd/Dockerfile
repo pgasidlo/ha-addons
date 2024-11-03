@@ -33,11 +33,11 @@ RUN chown user1:user1 /home/user1/aports
 USER user1
 
 # create keys for signing packages after the build has been finished
-RUN abuild-keygen -a -n
+RUN abuild-keygen -a -n -i
 
 RUN mkdir -p /home/user1/aports/ebusd
 COPY APKBUILD /home/user1/aports/ebusd
-RUN cd /home/user1/aports/ebusd && sudo abuild -r
+RUN cd /home/user1/aports/ebusd && abuild -r
 
 RUN find /home/user1/packages/ >&2
 
