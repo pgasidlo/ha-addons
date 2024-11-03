@@ -1,7 +1,7 @@
 #ARG BUILD_FROM
 #FROM $BUILD_FROM
 
-FROM node:19-alpine
+FROM node:18-alpine
 
 ENV LANG C.UTF-8
 
