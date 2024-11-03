@@ -30,7 +30,7 @@ WORKDIR /home/user1/aports
 RUN chown user1:user1 /home/user1/aports
 
 # make user1 the current user in the image
-USER user1
+#USER user1
 
 # create keys for signing packages after the build has been finished
 RUN abuild-keygen -a -n -i
