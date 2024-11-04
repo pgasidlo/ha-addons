@@ -37,21 +37,17 @@ USER user1
 RUN mkdir -p /home/user1/aports/ebusd
 COPY APKBUILD /home/user1/aports/ebusd
 
+# github nosudo hacking
 USER root
-
-# Set architecture in an environment variable
-ARG ARCH
-RUN ARCH=$(uname -m) && echo "Architecture is $ARCH"
-
-RUN su user1 CBUILD=$ARCH PATH=$PATH bash -c "cd /home/user1 && CBUILD=`uname -m` abuild-keygen -a -n"
-RUN su user1 CBUILD=$ARCH PATH=$PATH bash -c "cd /home/user1/aports/ebusd && CBUILD=`uname -m` abuild validate builddeps clean fetch unpack prepare mkusers build check rootpkg"
+RUN su user1 CBUILD=$ARCH PATH=$PATH bash -c "cd /home/user1 && abuild-keygen -a -n"
+RUN su user1 CBUILD=$ARCH PATH=$PATH bash -c "cd /home/user1/aports/ebusd && abuild -r"
 
 RUN apk list -I | cut -f1 -d' ' | sed -e 's/-r\d\+$//'| sed 's/\(.*\)-\(.*\)/\1/' >> /etc/apk/packages-after
 RUN cat /etc/apk/packages-after | grep -v -f /etc/apk/packages-before >> /etc/apk/packages-remove
 RUN apk del `cat /etc/apk/packages-remove`
 RUN rm /etc/apk/packages-after /etc/apk/packages-before /etc/apk/packages-remove
 
-RUN apk add --allow-untrusted /home/user1/packages/aports/`uname -m`/ebusd-24.1-r0.apk
+RUN apk add --allow-untrusted `find /home/user1/packages/aports/ -name ebusd-24.1-r0.apk`
 
 LABEL Description="ebusd"
 
