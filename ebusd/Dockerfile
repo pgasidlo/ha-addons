@@ -44,7 +44,7 @@ ARG ARCH
 RUN ARCH=$(uname -m) && echo "Architecture is $ARCH"
 
 RUN su - user1 CBUILD=$ARCH PATH=$PATH bash -c "cd /home/user1 && CBUILD=`uname -m` abuild-keygen -a -n"
-RUN su - user1 CBUILD=$ARCH PATH=$PATH bash -c "cd /home/user1/aports/ebusd && CBUILD=`uname -m` abuild validate builddeps clean fetchunpack prepare mkusers build check rootpkg"
+RUN su - user1 CBUILD=$ARCH PATH=$PATH bash -c "cd /home/user1/aports/ebusd && CBUILD=`uname -m` abuild validate builddeps clean fetch unpack prepare mkusers build check rootpkg"
 
 RUN apk add --allow-untrusted /home/user1/packages/aports/$ARCH/ebusd-24.1-r0.apk
 
