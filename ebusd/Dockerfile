@@ -48,8 +48,11 @@ RUN rm /etc/apk/packages-after /etc/apk/packages-before /etc/apk/packages-remove
 RUN apk add --allow-untrusted `find /home/user1/packages/aports/ -name ebusd-*.apk`
 
 # homedir cleanup
-RUN deluser --quiet --remove-home user1
-RUN delgroup --quiet abuild
+RUN deluser --remove-home user1
+RUN delgroup abuild
+
+# sudo cleanup
+RUN rm /etc/sudoers.d/abuild
 
 LABEL Description="ebusd"
 
