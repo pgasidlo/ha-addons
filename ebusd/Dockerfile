@@ -38,18 +38,18 @@ USER root
 RUN su user1 PATH=$PATH bash -c "cd /home/user1 && abuild-keygen -a -n"
 RUN su user1 PATH=$PATH bash -c "cd /home/user1/aports/ebusd && abuild validate builddeps clean fetch unpack prepare mkusers build check rootpkg"
 
-# install
-RUN apk add --allow-untrusted `find /home/user1/packages/aports/ -name ebusd-*.apk`
-
-# cleanup
+# package cleanup
 RUN apk list -I | cut -f1 -d' ' | sed -e 's/-r\d\+$//'| sed 's/\(.*\)-\(.*\)/\1/' >> /etc/apk/packages-after
 RUN cat /etc/apk/packages-after | grep -v -f /etc/apk/packages-before >> /etc/apk/packages-remove
 RUN apk del `cat /etc/apk/packages-remove`
 RUN rm /etc/apk/packages-after /etc/apk/packages-before /etc/apk/packages-remove
 
-RUN rm -rf /home/user1
-RUN delgroup abuild
-RUN deluser user1
+# install package with dependencies
+RUN apk add --allow-untrusted `find /home/user1/packages/aports/ -name ebusd-*.apk`
+
+# homedir cleanup
+RUN deluser --quiet --remove-home user1
+RUN delgroup --quiet abuild
 
 LABEL Description="ebusd"
 
