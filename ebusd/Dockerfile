@@ -31,7 +31,7 @@ VOLUME /home/user1/aports
 WORKDIR /home/user1/aports
 RUN mkdir -p /home/user1/aports/ebusd
 COPY APKBUILD /home/user1/aports/ebusd
-RUN chown -r user1:user1 /home/user1/aports
+RUN chown -R user1:user1 /home/user1/aports
 
 # github nosudo hacking
 USER root
